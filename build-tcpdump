@@ -18,25 +18,25 @@
 # --------------------------------------
 
 # default, edit version 
-tcpdump_ver=4.4.0
-libpcap_ver=1.4.0
-android_api_def=9
+tcpdump_ver=4.6.2
+libpcap_ver=1.6.2
+android_api_def=21
+toolchain_ver=arm-linux-androideabi-4.9
 
 #-------------------------------------------------------#
-ndk_dir_def=android-ndk-r9
 
 tcpdump_dir=tcpdump-${tcpdump_ver}
 libpcap_dir=libpcap-${libpcap_ver}
+build_dir=build
 
-
-if [ ${NDK} ]
+if [ ${NDK_HOME} ]
 then
-	ndk_dir=${NDK}
+       ndk_dir=${NDK_HOME}
 else
-	ndk_dir=${ndk_dir_def}
+       echo "Specify an NDK_HOME environment varaible first."
+       exit 1
 fi
 
-ndk_dir=`readlink -f ${ndk_dir}`
 
 if [ ${ANDROID_API} ]
 then
@@ -72,8 +72,8 @@ exit_error()
 			exit_error
 		fi
 	else
-		mkdir tcpdumpbuild
-		cd tcpdumpbuild
+		mkdir $build_dir
+		pushd $build_dir
 	fi
 }
 
@@ -92,7 +92,7 @@ exit_error()
 	else
 		echo Creating toolchain...
 		mkdir toolchain
-		sh ${ndk_dir}/build/tools/make-standalone-toolchain.sh --platform=android-${android_api} --install-dir=toolchain
+		sh ${ndk_dir}/build/tools/make-standalone-toolchain.sh --platform=android-${android_api} --install-dir=toolchain --arch=arm
 		
 		if [ $? -ne 0 ]
 		then
@@ -161,7 +161,7 @@ exit_error()
 	fi
 }
 
-# build libpcap
+build libpcap
 {
 	cd ${libpcap_dir}
 
@@ -193,8 +193,7 @@ exit_error()
 
 	cd ..
 }
-
-# build libpcap
+	
 {
 	cd ${tcpdump_dir}
 	
@@ -204,7 +203,7 @@ exit_error()
 	echo "|_____________________|"
 	
 	chmod +x configure
-	./configure --host=arm-linux --with-pcap=linux ac_cv_linux_vers=2 --with-crypto=no
+	./configure --host=arm-linux --with-pcap=linux ac_cv_linux_vers=2 --with-crypto=no --disable-ipv6
 
 	if [ $? -ne 0 ]
 	then
@@ -220,8 +219,10 @@ exit_error()
 	sed -i".bak" "s/setprotoent/\/\/setprotoent/g" print-isakmp.c
 	sed -i".bak" "s/endprotoent/\/\/endprotoent/g" print-isakmp.c
 	
-	#NBBY is not defined => FORCE definition
-	make CFLAGS=-DNBBY=8 # for tcpdump < 4.2.1 (CFLAGS refefined in Makefile) => just make
+	export CFLAGS="-fPIE -pie"
+	export LDFLAGS="-fPIE -pie"
+
+	make # for tcpdump < 4.2.1 (CFLAGS refefined in Makefile) => just make
 	
 	if [ $? -ne 0 ]
 	then
