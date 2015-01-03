@@ -4,24 +4,20 @@
 #
 #     Title: build-tcpdump
 #    Author: Loic Poulain, loic.poulain@gmail.com
+#  Modified: Jake McGinty
 #
-#   Purpose: download & build tcpdump for arm android platform
 #
 # You have to define your android NDK directory before calling this script
 # example:
-# $ export NDK=/home/Workspace/android-ndk-r8
+# $ export NDK_HOME=/home/Workspace/android-ndk-r8
 # $ sh build-tcpdump
 #
-# functionnal
-# 	with tcpdump 4.3.0, 4.2.1
-# 	with android-ndk-r8
 # --------------------------------------
 
 # default, edit version 
 tcpdump_ver=4.6.2
 libpcap_ver=1.6.2
 android_api_def=21
-toolchain_ver=arm-linux-androideabi-4.9
 
 #-------------------------------------------------------#
 
@@ -222,7 +218,7 @@ build libpcap
 	export CFLAGS="-fPIE -pie"
 	export LDFLAGS="-fPIE -pie"
 
-	make # for tcpdump < 4.2.1 (CFLAGS refefined in Makefile) => just make
+	make
 	
 	if [ $? -ne 0 ]
 	then
