@@ -8,25 +8,16 @@ Build
 -----
 Install the [Android NDK](https://developer.android.com/tools/sdk/ndk/index.html) then:  
 
-    export NDK=/ndk/is/here  
+    export NDK_HOME=/ndk/is/here
     ./build-tcpdump
 
 Install on Droid
 ----------------
-    > adb push tcpdumpbuild/tcpdump /sdcard
-    > adb shell
-    # su
-    # mount | grep system
-    /dev/block/xxxxxxxx /system ext4 ro,relatime,barrier=1,data=ordered 0 0
-    # mount -o remount,rw /dev/block/xxxxxxxx /system
-    # cp /sdcard/tcpdump /system/bin/tcpdump
-    # mount -o remount,ro /dev/block/xxxxxxxx /system
+    adb root
+    adb remount
+    adb push build/tcpdump /system/xbin/tcpdump
+    adb chmod 6755 /system/xbin/tcpdump
 
 Run
 ---
-    # tcpdump -D (or run netcfg)
-    1.eth0
-    2.any (Pseudo-device that captures on all interfaces)
-    3.lo
-    
-    # tcpdump -vv -i eth0 -s 0 -w /sdcard/dump.cap
+    adb shell tcpdump -vv -i any -s 0 -w /sdcard/capture.pcap
