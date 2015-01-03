@@ -6,7 +6,7 @@ It was written by Loic Poulain on OMAPpedia. See http://omappedia.org/wiki/USB_S
 
 Build
 -----
-Install the [Android NDK](https://developer.android.com/tools/sdk/ndk/index.html) then:  
+Install the [Android NDK](https://developer.android.com/tools/sdk/ndk/index.html) (`brew install android-ndk` if you have Homebrew) then:  
 
     export NDK_HOME=/ndk/is/here
     ./build-tcpdump
