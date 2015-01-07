@@ -1,18 +1,18 @@
 Overview
 --------
-This script will cross compile tcpdump for use on Android devices.
+This script will compile tcpdump for use on modern Android devices.
 
-It was written by Loic Poulain on OMAPpedia. See http://omappedia.org/wiki/USB_Sniffing_with_tcpdump for full details.
+Forked from https://github.com/chatch/tcpdump-android, originally by Loic Poulain on OMAPpedia (http://omappedia.org/wiki/USB_Sniffing_with_tcpdump).
 
 Build
 -----
-Install the [Android NDK](https://developer.android.com/tools/sdk/ndk/index.html) (`brew install android-ndk` if you have Homebrew) then:  
+Install the [Android NDK](https://developer.android.com/tools/sdk/ndk/index.html) (`brew install android-ndk` if you have Homebrew) then run the following, replacing the ndk path accordingly:  
 
-    export NDK_HOME=/ndk/is/here
+    export NDK_HOME=/usr/local/Cellar/android-ndk/r10d/
     ./build-tcpdump
 
-Install on Droid
-----------------
+Install
+-------
     adb root
     adb remount
     adb push build/tcpdump /system/xbin/tcpdump
@@ -21,3 +21,5 @@ Install on Droid
 Run
 ---
     adb shell tcpdump -vv -i any -s 0 -w /sdcard/capture.pcap
+
+Then pull from your device and go on your merry way down wireshark road.
