@@ -15,8 +15,8 @@
 # --------------------------------------
 
 # default, edit version 
-tcpdump_ver=4.6.2
-libpcap_ver=1.6.2
+tcpdump_ver=4.7.4
+libpcap_ver=1.7.3
 android_api_def=21
 
 #-------------------------------------------------------#
@@ -167,7 +167,9 @@ build libpcap
 	echo "|_____________________|"
 
 	chmod +x configure
-	./configure --host=arm-linux --with-pcap=linux ac_cv_linux_vers=2
+	./configure --host=arm-linux \
+              --with-pcap=linux \
+              ac_cv_linux_vers=2
 
 	if [ $? -ne 0 ]
 	then
@@ -199,7 +201,14 @@ build libpcap
 	echo "|_____________________|"
 	
 	chmod +x configure
-	./configure --host=arm-linux --with-pcap=linux ac_cv_linux_vers=2 --with-crypto=no --disable-ipv6
+	./configure --host=arm-linux \
+              --with-pcap=linux \
+              --with-crypto=no \
+              --disable-ipv6 \
+              ac_cv_linux_vers=2 \
+              CPPFLAGS="-fPIE" \
+              CFLAGS="-fPIE" \
+              LDFLAGS="-fPIE -pie"
 
 	if [ $? -ne 0 ]
 	then
@@ -214,9 +223,6 @@ build libpcap
 	#setprotoent endprotoen not supported on android
 	sed -i".bak" "s/setprotoent/\/\/setprotoent/g" print-isakmp.c
 	sed -i".bak" "s/endprotoent/\/\/endprotoent/g" print-isakmp.c
-	
-	export CFLAGS="-fPIE -pie"
-	export LDFLAGS="-fPIE -pie"
 
 	make
 	
