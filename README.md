@@ -16,7 +16,7 @@ Install
     adb root
     adb remount
     adb push build/tcpdump /system/xbin/tcpdump
-    adb chmod 6755 /system/xbin/tcpdump
+    adb shell chmod 6755 /system/xbin/tcpdump
 
 Run
 ---
