@@ -16,7 +16,7 @@
 
 # default, edit version 
 tcpdump_ver=4.7.4
-libpcap_ver=1.7.3
+libpcap_ver=1.7.4
 android_api_def=21
 
 #-------------------------------------------------------#
@@ -157,7 +157,7 @@ exit_error()
 	fi
 }
 
-build libpcap
+# build libpcap
 {
 	cd ${libpcap_dir}
 
